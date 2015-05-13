@@ -11,7 +11,7 @@ namespace DevExpress.Mvvm {
     public interface IMessageButtonLocalizer {
         string Localize(MessageResult button);
     }
-#if !NETFX_CORE
+#if !NETFX_CORE && !MONO
     [Browsable(false), EditorBrowsable(EditorBrowsableState.Never)]
     public interface IMessageBoxButtonLocalizer {
         string Localize(MessageBoxResult button);
@@ -42,7 +42,7 @@ namespace DevExpress.Mvvm {
             return string.Empty;
         }
     }
-#if !NETFX_CORE
+#if !NETFX_CORE &&!MONO
     [Browsable(false), EditorBrowsable(EditorBrowsableState.Never)]
     public class DefaultMessageBoxButtonLocalizer : IMessageBoxButtonLocalizer {
         DefaultMessageButtonLocalizer localizer = new DefaultMessageButtonLocalizer();

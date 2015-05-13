@@ -7,7 +7,9 @@ using System.Windows;
 namespace DevExpress.Mvvm {
     public interface ICurrentWindowService {
         void Close();
+#if !MONO
         void SetWindowState(WindowState state);
+#endif
         void Activate();
         void Hide();
         void Show();

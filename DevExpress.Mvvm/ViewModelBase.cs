@@ -11,7 +11,9 @@ using System.Windows;
 using System.Windows.Input;
 #if !NETFX_CORE
 using DevExpress.Mvvm.POCO;
+#if !MONO
 using System.Windows.Threading;
+#endif
 #else
 using Windows.UI.Xaml;
 #endif
@@ -35,6 +37,7 @@ namespace DevExpress.Mvvm {
                 if(ViewModelDesignHelper.IsInDesignModeOverride.HasValue)
                     return ViewModelDesignHelper.IsInDesignModeOverride.Value;
                 if(!isInDesignMode.HasValue) {
+#if !MONO
 #if SILVERLIGHT
                     isInDesignMode = DesignerProperties.IsInDesignTool;
 #elif NETFX_CORE
@@ -42,6 +45,9 @@ namespace DevExpress.Mvvm {
 #else
                     DependencyPropertyDescriptor property = DependencyPropertyDescriptor.FromProperty(DesignerProperties.IsInDesignModeProperty, typeof(FrameworkElement));
                     isInDesignMode = (bool)property.Metadata.DefaultValue;
+#endif
+#else
+                    isInDesignMode = false; // MONO TODO
 #endif
                 }
                 return isInDesignMode.Value;
@@ -75,7 +81,7 @@ namespace DevExpress.Mvvm {
             if(IsInDesignMode) {
 #if SILVERLIGHT
                 Deployment.Current.Dispatcher.BeginInvoke(new Action(OnInitializeInDesignMode));
-#elif NETFX_CORE
+#elif NETFX_CORE || MONO
                 OnInitializeInDesignMode();
 #else
                 Dispatcher.CurrentDispatcher.BeginInvoke(new Action(OnInitializeInDesignMode));
@@ -232,7 +238,7 @@ namespace DevExpress.Mvvm {
                 return new DelegateCommand<T>(
                     x => method.Invoke(owner, GetInvokeParameters(x, hasParameter)),
                     x => canExecuteMethod != null ? (bool)canExecuteMethod.Invoke(owner, GetInvokeParameters(x, hasParameter)) : true
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !MONO
 , useCommandManager
 #endif
 );

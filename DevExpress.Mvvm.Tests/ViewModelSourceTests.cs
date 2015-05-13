@@ -3,7 +3,9 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.Silverlight.Testing;
 #else
 using NUnit.Framework;
+#if !MONO
 using System.Windows.Threading;
+#endif
 #endif
 using System;
 using System.Collections.Generic;
@@ -16,11 +18,13 @@ using System.Windows;
 using System.ComponentModel.DataAnnotations;
 using DevExpress.Mvvm.DataAnnotations;
 using DevExpress.Mvvm.Native;
+#if !MONO
 using System.Windows.Controls;
 using System.Windows.Data;
+using DevExpress.Mvvm.TestClasses.VB;
+#endif
 using Moq;
 using DevExpress.Mvvm.POCO;
-using DevExpress.Mvvm.TestClasses.VB;
 using System.Threading.Tasks;
 using System.Threading;
 using Expression = System.Linq.Expressions.Expression;
@@ -720,6 +724,7 @@ namespace DevExpress.Mvvm.Tests {
             var methodExpression = Expression.Lambda<Action<ViewModelWithFunctionCommandMethod>>(Expression.Invoke(expression, parameter2), parameter2);
             Assert.IsNotNull(POCOViewModelExtensions.GetCommand(viewModel, methodExpression));
         }
+#if!MONO
         [Test]
         public void PropertyChangedTest_VB() {
             VbPOCOViewModel viewModel = ViewModelSource.Create<VbPOCOViewModel>();
@@ -732,6 +737,7 @@ namespace DevExpress.Mvvm.Tests {
             CheckNotBindableProperty(viewModel, x => x.PseudoAutoImplementedProperty_WrongFieldType, (vm, x) => vm.PseudoAutoImplementedProperty_WrongFieldType = x, 1, 2);
             CheckBindableProperty(viewModel, x => x.PseudoAutoImplementedProperty, (vm, x) => vm.PseudoAutoImplementedProperty = x, 1, 2);
         }
+#endif
         #endregion
 
         #region property changing
@@ -888,6 +894,7 @@ namespace DevExpress.Mvvm.Tests {
             viewModel.RaisePropertiesChanged();
             Assert.AreEqual(string.Empty, propertyName);
         }
+#if!MONO
         [Test]
         public void GetSetParentViewModel() {
             var viewModel = ViewModelSource.Create<POCOViewModel>();
@@ -896,6 +903,7 @@ namespace DevExpress.Mvvm.Tests {
             Assert.AreSame(viewModel, viewModel.SetParentViewModel(b));
             Assert.AreEqual(b, viewModel.GetParentViewModel<Button>());
         }
+#endif
         #endregion
 
         #region commands
@@ -1201,6 +1209,7 @@ namespace DevExpress.Mvvm.Tests {
 
             public bool CanMethodWithCustomCanExecute_() { return MethodWithCustomCanExecuteCanExcute; }
         }
+#if!MONO
         [Test, Asynchronous]
         public void CommandAttribute_ViewModelTest() {
             var viewModel = ViewModelSource.Create<CommandAttributeViewModel>();
@@ -1253,7 +1262,7 @@ namespace DevExpress.Mvvm.Tests {
                 Assert.IsFalse(button.IsEnabled, "0");
                 viewModel.MethodWithCanExecuteCanExcute = true;
             });
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !MONO
             EnqueueWindowUpdateLayout(DispatcherPriority.Normal);
 #endif
             EnqueueCallback(() => {
@@ -1305,7 +1314,7 @@ namespace DevExpress.Mvvm.Tests {
             });
             EnqueueTestComplete();
         }
-
+#endif
         public class POCOViewModel_CommandsInViewModelBaseDescendant : ViewModelBase {
             [Command]
             public void Save() { SaveCallCount++; }
@@ -1319,7 +1328,7 @@ namespace DevExpress.Mvvm.Tests {
             int canExecuteChangedCount = 0;
             command.CanExecuteChanged += (x, e) => canExecuteChangedCount++;
             viewModel.RaiseCanExecuteChanged(() => viewModel.Save());
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !MONO
             DispatcherHelper.DoEvents();
 #endif
             Assert.AreEqual(1, canExecuteChangedCount);
@@ -1338,7 +1347,7 @@ namespace DevExpress.Mvvm.Tests {
             int canExecuteChangedCount = 0;
             command.CanExecuteChanged += (x, e) => canExecuteChangedCount++;
             viewModel.RaiseCanExecuteChanged(() => viewModel.Save());
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !MONO
             DispatcherHelper.DoEvents();
 #endif
             Assert.AreEqual(1, canExecuteChangedCount);

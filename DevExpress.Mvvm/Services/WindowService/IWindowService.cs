@@ -10,7 +10,7 @@ namespace DevExpress.Mvvm {
         [Browsable(false), EditorBrowsable(EditorBrowsableState.Never)]
         void Show(string documentType, object viewModel, object parameter, object parentViewModel);
         string Title { get; set; }
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !MONO
         void SetWindowState(WindowState state);
 #endif
         bool IsWindowAlive { get; }

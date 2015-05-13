@@ -6,11 +6,13 @@ using System.Threading;
 using System.Windows;
 using DevExpress.Mvvm.Internal;
 using DevExpress.Mvvm.Native;
+#if !MONO
 #if !NETFX_CORE
 using System.Windows.Threading;
 #else
 using Windows.UI.Xaml;
 using Windows.UI.Core;
+#endif
 #endif
 
 namespace DevExpress.Mvvm {
@@ -74,7 +76,7 @@ namespace DevExpress.Mvvm {
             }
         }
         #endregion
-#if !SILVERLIGHT && !NETFX_CORE
+#if !SILVERLIGHT && !NETFX_CORE && !MONO
         const DispatcherPriority CleanUpPriority = DispatcherPriority.ApplicationIdle;
 #endif
         static readonly object defaultMessengerLock = new object();
@@ -165,6 +167,7 @@ namespace DevExpress.Mvvm {
         public void RequestCleanup() {
             if(cleanupScheduled) return;
             cleanupScheduled = true;
+#if !MONO
 #if SILVERLIGHT
             Deployment.Current.Dispatcher.BeginInvoke(new Action(Cleanup));
 #elif NETFX_CORE
@@ -174,6 +177,9 @@ namespace DevExpress.Mvvm {
 #pragma warning restore 4014
 #else
             Dispatcher.CurrentDispatcher.BeginInvoke(new Action(Cleanup), CleanUpPriority, null);
+#endif
+#else
+            Cleanup();
 #endif
         }
         static IActionInvokerFactory CreateActionInvokerFactory(ActionReferenceType actionReferenceType) {

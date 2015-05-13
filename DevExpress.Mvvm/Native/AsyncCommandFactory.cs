@@ -37,7 +37,7 @@ namespace DevExpress.Mvvm.Native {
         }
 
         public static AsyncCommand<T> CreateFromFunction<T, TResult>(Func<T, Task> executeMethod, Func<T, bool> canExecuteMethod, bool allowMultipleExecution, bool useCommandManager) {
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !MONO
             return new AsyncCommand<T>(x => executeMethod(x), canExecuteMethod, allowMultipleExecution, useCommandManager);
 #else
             return new AsyncCommand<T>(x => executeMethod(x), canExecuteMethod, allowMultipleExecution);
@@ -47,7 +47,7 @@ namespace DevExpress.Mvvm.Native {
             return new AsyncCommand<T>(x => executeMethod(x), canExecuteMethod, allowMultipleExecution);
         }
         public static AsyncCommand CreateFromFunction<TResult>(Func<Task> executeMethod, Func<bool> canExecuteMethod, bool allowMultipleExecution, bool useCommandManager) {
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !MONO
             return new AsyncCommand(() => executeMethod(), canExecuteMethod, allowMultipleExecution, useCommandManager);
 #else
             return new AsyncCommand(() => executeMethod(), canExecuteMethod, allowMultipleExecution);

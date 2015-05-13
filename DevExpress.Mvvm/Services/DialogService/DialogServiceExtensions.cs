@@ -19,6 +19,7 @@ namespace DevExpress.Mvvm {
             return service.ShowDialog(dialogCommands, title, null, viewModel, null, null);
         }
         [Browsable(false), EditorBrowsable(EditorBrowsableState.Never)]
+#if !MONO
 #if !SILVERLIGHT
         public static MessageBoxResult ShowDialog(this IDialogService service, MessageBoxButton dialogButtons, string title, object viewModel) {
 #else
@@ -28,6 +29,7 @@ namespace DevExpress.Mvvm {
             var res = service.ShowDialog(UICommand.GenerateFromMessageBoxButton(dialogButtons, GetLocalizer(service)), title, null, viewModel, null, null);
             return GetMessageBoxResult(res);
         }
+#endif
 #if !SILVERLIGHT
         public static MessageResult ShowDialog(this IDialogService service, MessageButton dialogButtons, string title, object viewModel) {
 #else
@@ -46,6 +48,7 @@ namespace DevExpress.Mvvm {
             VerifyService(service);
             return service.ShowDialog(dialogCommands, title, documentType, viewModel, null, null);
         }
+#if !MONO
         [Browsable(false), EditorBrowsable(EditorBrowsableState.Never)]
 #if !SILVERLIGHT
         public static MessageBoxResult ShowDialog(this IDialogService service, MessageBoxButton dialogButtons, string title, string documentType, object viewModel) {
@@ -56,6 +59,7 @@ namespace DevExpress.Mvvm {
             var res = service.ShowDialog(UICommand.GenerateFromMessageBoxButton(dialogButtons, GetLocalizer(service)), title, documentType, viewModel, null, null);
             return GetMessageBoxResult(res);
         }
+#endif
 #if !SILVERLIGHT
         public static MessageResult ShowDialog(this IDialogService service, MessageButton dialogButtons, string title, string documentType, object viewModel) {
 #else
@@ -74,6 +78,7 @@ namespace DevExpress.Mvvm {
             VerifyService(service);
             return service.ShowDialog(dialogCommands, title, documentType, null, parameter, parentViewModel);
         }
+#if !MONO
         [Browsable(false), EditorBrowsable(EditorBrowsableState.Never)]
 #if !SILVERLIGHT
         public static MessageBoxResult ShowDialog(this IDialogService service, MessageBoxButton dialogButtons, string title, string documentType, object parameter, object parentViewModel) {
@@ -84,6 +89,7 @@ namespace DevExpress.Mvvm {
             var res = service.ShowDialog(UICommand.GenerateFromMessageBoxButton(dialogButtons, GetLocalizer(service)), title, documentType, null, parameter, parentViewModel);
             return GetMessageBoxResult(res);
         }
+#endif
 #if !SILVERLIGHT
         public static MessageResult ShowDialog(this IDialogService service, MessageButton dialogButtons, string title, string documentType, object parameter, object parentViewModel) {
 #else
@@ -95,11 +101,15 @@ namespace DevExpress.Mvvm {
         }
 
         static void VerifyService(IDialogService service) {
-            if (service == null)
+            if(service == null)
                 throw new ArgumentNullException("service");
         }
         static IMessageButtonLocalizer GetLocalizer(IDialogService service) {
+#if!MONO
             return service as IMessageButtonLocalizer ?? (service as IMessageBoxButtonLocalizer).With(x => x.ToMessageButtonLocalizer()) ?? new DefaultMessageButtonLocalizer();
+#else
+            return service as IMessageButtonLocalizer ?? new DefaultMessageButtonLocalizer();
+#endif
         }
 #if SILVERLIGHT
         static Task<MessageResult> GetMessageResult(Task<UICommand> result) {
@@ -118,10 +128,12 @@ namespace DevExpress.Mvvm {
                 return MessageResult.None;
             return (MessageResult)result.Tag;
         }
+#if !MONO
         static MessageBoxResult GetMessageBoxResult(UICommand result) {
             if(result == null)
                 return MessageBoxResult.None;
             return (MessageBoxResult)result.Tag;
         }
+#endif
     }
 }

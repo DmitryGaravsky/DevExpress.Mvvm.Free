@@ -8,16 +8,18 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+#if !MONO
 #if !NETFX_CORE
 using System.Windows.Threading;
 #else
 using Windows.UI.Xaml;
 using Windows.UI.Core;
 #endif
+#endif
 
 namespace DevExpress.Mvvm {
     public abstract class CommandBase {
-#if !SILVERLIGHT && !NETFX_CORE
+#if !SILVERLIGHT && !NETFX_CORE && !MONO
         static bool defaultUseCommandManager = true;
 
         public static bool DefaultUseCommandManager { get { return defaultUseCommandManager; } set { defaultUseCommandManager = value; } }
@@ -31,25 +33,27 @@ namespace DevExpress.Mvvm {
         public event EventHandler CanExecuteChanged {
             add {
                 if(useCommandManager) {
-#if !SILVERLIGHT && !NETFX_CORE
+#if !SILVERLIGHT && !NETFX_CORE && !MONO
                     CommandManager.RequerySuggested += value;
 #endif
-                } else {
+                }
+                else {
                     canExecuteChanged += value;
                 }
             }
             remove {
                 if(useCommandManager) {
-#if !SILVERLIGHT && !NETFX_CORE
+#if !SILVERLIGHT && !NETFX_CORE && !MONO
                     CommandManager.RequerySuggested -= value;
 #endif
-                } else {
+                }
+                else {
                     canExecuteChanged -= value;
                 }
             }
         }
 
-#if !SILVERLIGHT && !NETFX_CORE
+#if !SILVERLIGHT && !NETFX_CORE && !MONO
         public CommandBase(bool? useCommandManager = null) {
             this.useCommandManager = useCommandManager ?? DefaultUseCommandManager;
         }
@@ -67,10 +71,11 @@ namespace DevExpress.Mvvm {
 
         public void RaiseCanExecuteChanged() {
             if(useCommandManager) {
-#if !SILVERLIGHT && !NETFX_CORE
+#if !SILVERLIGHT && !NETFX_CORE && !MONO
                 CommandManager.InvalidateRequerySuggested();
 #endif
-            } else {
+            }
+            else {
                 OnCanExecuteChanged();
             }
         }
@@ -100,7 +105,7 @@ namespace DevExpress.Mvvm {
             this.executeMethod = executeMethod;
             this.canExecuteMethod = canExecuteMethod;
         }
-#if !SILVERLIGHT && !NETFX_CORE
+#if !SILVERLIGHT && !NETFX_CORE && !MONO
         public DelegateCommandBase(Action<T> executeMethod)
             : this(executeMethod, null, null) {
         }
@@ -113,12 +118,12 @@ namespace DevExpress.Mvvm {
         }
 #else
         public DelegateCommandBase(Action<T> executeMethod)
-                : this(executeMethod, null) {
-            }
-            public DelegateCommandBase(Action<T> executeMethod, Func<T, bool> canExecuteMethod)
-            :base(){
-                Init(executeMethod, canExecuteMethod);
-            }
+            : this(executeMethod, null) {
+        }
+        public DelegateCommandBase(Action<T> executeMethod, Func<T, bool> canExecuteMethod)
+            : base() {
+            Init(executeMethod, canExecuteMethod);
+        }
 #endif
     }
     public abstract class AsyncCommandBase<T> : CommandBase<T>, INotifyPropertyChanged {
@@ -131,7 +136,7 @@ namespace DevExpress.Mvvm {
             this.canExecuteMethod = canExecuteMethod;
         }
 
-#if !SILVERLIGHT && !NETFX_CORE
+#if !SILVERLIGHT && !NETFX_CORE && !MONO
         public AsyncCommandBase(Func<T, Task> executeMethod)
             : this(executeMethod, null, null) {
         }
@@ -147,7 +152,7 @@ namespace DevExpress.Mvvm {
             : this(executeMethod, null) {
         }
         public AsyncCommandBase(Func<T, Task> executeMethod, Func<T, bool> canExecuteMethod)
-        :base(){
+            : base() {
             Init(executeMethod, canExecuteMethod);
         }
 #endif
@@ -163,7 +168,7 @@ namespace DevExpress.Mvvm {
         }
     }
     public class DelegateCommand<T> : DelegateCommandBase<T> {
-#if !SILVERLIGHT && !NETFX_CORE
+#if !SILVERLIGHT && !NETFX_CORE && !MONO
         public DelegateCommand(Action<T> executeMethod)
             : this(executeMethod, null, null) {
         }
@@ -178,7 +183,7 @@ namespace DevExpress.Mvvm {
             : this(executeMethod, null) {
         }
         public DelegateCommand(Action<T> executeMethod, Func<T, bool> canExecuteMethod)
-        : base (executeMethod, canExecuteMethod){
+            : base(executeMethod, canExecuteMethod) {
         }
 #endif
         public override void Execute(T parameter) {
@@ -190,7 +195,7 @@ namespace DevExpress.Mvvm {
     }
 
     public class DelegateCommand : DelegateCommand<object> {
-#if !SILVERLIGHT && !NETFX_CORE
+#if !SILVERLIGHT && !NETFX_CORE && !MONO
         public DelegateCommand(Action executeMethod)
             : this(executeMethod, null, null) {
         }
@@ -205,13 +210,13 @@ namespace DevExpress.Mvvm {
         }
 #else
         public DelegateCommand(Action executeMethod)
-                : this(executeMethod, null) {
-            }
-            public DelegateCommand(Action executeMethod, Func<bool> canExecuteMethod)
-                : base(
-                    executeMethod != null ? (Action<object>)(o => executeMethod()) : null,
-                    canExecuteMethod != null ? (Func<object, bool>)(o => canExecuteMethod()) : null) {
-            }
+            : this(executeMethod, null) {
+        }
+        public DelegateCommand(Action executeMethod, Func<bool> canExecuteMethod)
+            : base(
+                executeMethod != null ? (Action<object>)(o => executeMethod()) : null,
+                canExecuteMethod != null ? (Func<object, bool>)(o => canExecuteMethod()) : null) {
+        }
 #endif
     }
 
@@ -262,7 +267,7 @@ namespace DevExpress.Mvvm {
         public DelegateCommand CancelCommand { get; private set; }
         ICommand IAsyncCommand.CancelCommand { get { return CancelCommand; } }
 
-#if !SILVERLIGHT && !NETFX_CORE
+#if !SILVERLIGHT && !NETFX_CORE && !MONO
         public AsyncCommand(Func<T, Task> executeMethod)
             : this(executeMethod, null, false, null) {
         }
@@ -282,7 +287,7 @@ namespace DevExpress.Mvvm {
             : this(executeMethod, null, false) {
         }
         public AsyncCommand(Func<T, Task> executeMethod, Func<T, bool> canExecuteMethod)
-        :this(executeMethod, canExecuteMethod, false){
+            : this(executeMethod, canExecuteMethod, false) {
         }
         public AsyncCommand(Func<T, Task> executeMethod, Func<T, bool> canExecuteMethod, bool allowMultipleExecution)
             : base(executeMethod, canExecuteMethod) {
@@ -304,16 +309,19 @@ namespace DevExpress.Mvvm {
             Dispatcher dispatcher = Deployment.Current.Dispatcher;
 #elif NETFX_CORE
             var dispatcher = Window.Current.Dispatcher;
+#elif MONO
+            var scheduler = TaskScheduler.FromCurrentSynchronizationContext();
 #else
             Dispatcher dispatcher = Dispatcher.CurrentDispatcher;
 #endif
             CancellationTokenSource = new CancellationTokenSource();
-            executeTask = executeMethod(parameter).ContinueWith(x => {
+            executeTask = executeMethod(parameter).ContinueWith(x =>
+            {
+#if !MONO
 #if !NETFX_CORE
                 dispatcher.BeginInvoke(new Action(() => {
                     IsExecuting = false;
                     ShouldCancel = false;
-
                 }));
 #else
 #pragma warning disable 4014
@@ -324,6 +332,11 @@ namespace DevExpress.Mvvm {
 #pragma warning restore 4014
 #endif
             });
+#else
+                IsExecuting = false;
+                ShouldCancel = false;
+            }, scheduler);
+#endif
         }
         [Browsable(false), EditorBrowsable(EditorBrowsableState.Never)]
         public void Cancel() {
@@ -341,7 +354,7 @@ namespace DevExpress.Mvvm {
     }
 
     public class AsyncCommand : AsyncCommand<object> {
-#if !SILVERLIGHT && !NETFX_CORE
+#if !SILVERLIGHT && !NETFX_CORE && !MONO
         public AsyncCommand(Func<Task> executeMethod)
             : this(executeMethod, null, false, null) {
         }
@@ -359,18 +372,18 @@ namespace DevExpress.Mvvm {
                 useCommandManager) {
         }
 #else
-            public AsyncCommand(Func<Task> executeMethod)
-                : this(executeMethod, null, false) {
-            }
-            public AsyncCommand(Func<Task> executeMethod, Func<bool> canExecuteMethod)
-                : this(executeMethod, canExecuteMethod, false) {
-            }
-            public AsyncCommand(Func<Task> executeMethod, Func<bool> canExecuteMethod, bool allowMultipleExecution)
-                : base(
-                    executeMethod != null ? (Func<object, Task>)(o => executeMethod()) : null,
-                    canExecuteMethod != null ? (Func<object, bool>)(o => canExecuteMethod()) : null,
-                    allowMultipleExecution) {
-            }
+        public AsyncCommand(Func<Task> executeMethod)
+            : this(executeMethod, null, false) {
+        }
+        public AsyncCommand(Func<Task> executeMethod, Func<bool> canExecuteMethod)
+            : this(executeMethod, canExecuteMethod, false) {
+        }
+        public AsyncCommand(Func<Task> executeMethod, Func<bool> canExecuteMethod, bool allowMultipleExecution)
+            : base(
+                executeMethod != null ? (Func<object, Task>)(o => executeMethod()) : null,
+                canExecuteMethod != null ? (Func<object, bool>)(o => canExecuteMethod()) : null,
+                allowMultipleExecution) {
+        }
 #endif
     }
 }

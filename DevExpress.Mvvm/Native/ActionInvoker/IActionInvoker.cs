@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using DevExpress.Mvvm.Native;
-#if !NETFX_CORE
+#if !NETFX_CORE && !MONO
 using System.Windows.Threading;
 #endif
 

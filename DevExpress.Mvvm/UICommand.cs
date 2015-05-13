@@ -54,7 +54,7 @@ namespace DevExpress.Mvvm {
         public static List<UICommand> GenerateFromMessageButton(MessageButton dialogButtons, IMessageButtonLocalizer buttonLocalizer, MessageResult? defaultButton = null, MessageResult? cancelButton = null) {
             return GenerateFromMessageButton(dialogButtons, false, buttonLocalizer, defaultButton, cancelButton);
         }
-#if !NETFX_CORE
+#if !NETFX_CORE && !MONO
         [Browsable(false), EditorBrowsable(EditorBrowsableState.Never)]
         public static List<UICommand> GenerateFromMessageBoxButton(MessageBoxButton dialogButtons, IMessageBoxButtonLocalizer buttonLocalizer, MessageBoxResult? defaultButton = null, MessageBoxResult? cancelButton = null) {
             return GenerateFromMessageBoxButton(dialogButtons, buttonLocalizer.ToMessageButtonLocalizer(), defaultButton, cancelButton);
@@ -157,7 +157,7 @@ namespace DevExpress.Mvvm {
             return commands;
         }
         static UICommand CreateDefaultButonCommand(MessageResult result, bool usePlatformSpecificTag, Func<MessageResult, string> getButtonCaption) {
-#if !NETFX_CORE
+#if !NETFX_CORE && !MONO
             object tag = usePlatformSpecificTag ? result.ToMessageBoxResult() : (object)result;
 #else
             object tag = result;

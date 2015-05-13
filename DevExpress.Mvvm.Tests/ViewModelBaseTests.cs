@@ -13,7 +13,7 @@ using DevExpress.Mvvm.DataAnnotations;
 using System.Windows.Input;
 using DevExpress.Mvvm.Native;
 using System.ComponentModel.DataAnnotations;
-#if !NETFX_CORE
+#if !NETFX_CORE && !MONO
 using System.Windows.Controls;
 using System.Windows.Data;
 #endif
@@ -156,6 +156,7 @@ namespace DevExpress.Mvvm.Tests {
                     ;
             }
         }
+        #if !MONO
         [Test]
         public void CommandAttribute_ViewModelTest() {
             var viewModel = new CommandAttributeViewModel();
@@ -227,6 +228,7 @@ namespace DevExpress.Mvvm.Tests {
             Assert.IsTrue(button.IsEnabled);
 
         }
+#endif
         #region exceptions
 #pragma warning disable 0618
         public class NameConflictViewModel : ViewModelBase {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using DevExpress.Mvvm.Native;
-#if !NETFX_CORE
+#if !NETFX_CORE && !MONO
 using System.Windows.Threading;
 #endif
 
@@ -12,11 +12,11 @@ namespace DevExpress.Mvvm.Native {
         public WeakReferenceActionInvokerBase(object target, Delegate action)
             : base(target) {
 #if !NETFX_CORE
-                ActionMethod = action.Method;
+            ActionMethod = action.Method;
 #else
-                ActionMethod = action.GetMethodInfo();
+            ActionMethod = action.GetMethodInfo();
 #endif
-                ActionTargetReference = new WeakReference(action.Target);
+            ActionTargetReference = new WeakReference(action.Target);
         }
         protected MethodInfo ActionMethod { get; private set; }
         protected WeakReference ActionTargetReference { get; private set; }

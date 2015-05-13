@@ -42,7 +42,7 @@ namespace DevExpress.Mvvm.Native {
         }
 
         public static DelegateCommand<T> CreateFromFunction<T, TResult>(Func<T, TResult> executeMethod, Func<T, bool> canExecuteMethod, bool useCommandManager) {
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !MONO
             return new DelegateCommand<T>(x => executeMethod(x), canExecuteMethod, useCommandManager);
 #else
             return new DelegateCommand<T>(x => executeMethod(x), canExecuteMethod);
@@ -52,7 +52,7 @@ namespace DevExpress.Mvvm.Native {
             return new DelegateCommand<T>(x => executeMethod(x), canExecuteMethod);
         }
         public static DelegateCommand<T> Create<T>(Action<T> executeMethod, bool useCommandManager) {
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !MONO
             return new DelegateCommand<T>(executeMethod, useCommandManager);
 #else
             return new DelegateCommand<T>(executeMethod);
@@ -62,7 +62,7 @@ namespace DevExpress.Mvvm.Native {
             return new DelegateCommand<T>(executeMethod);
         }
         public static DelegateCommand<T> Create<T>(Action<T> executeMethod, Func<T, bool> canExecuteMethod, bool useCommandManager) {
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !MONO
             return new DelegateCommand<T>(executeMethod, canExecuteMethod, useCommandManager);
 #else
             return new DelegateCommand<T>(executeMethod, canExecuteMethod);
@@ -73,7 +73,7 @@ namespace DevExpress.Mvvm.Native {
         }
 
         public static DelegateCommand CreateFromFunction<TResult>(Func<TResult> executeMethod, Func<bool> canExecuteMethod, bool useCommandManager) {
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !MONO
             return new DelegateCommand(() => executeMethod(), canExecuteMethod, useCommandManager);
 #else
             return new DelegateCommand(() => executeMethod(), canExecuteMethod);
@@ -83,7 +83,7 @@ namespace DevExpress.Mvvm.Native {
             return new DelegateCommand(() => executeMethod(), canExecuteMethod);
         }
         public static DelegateCommand Create(Action executeMethod, bool useCommandManager) {
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !MONO
             return new DelegateCommand(executeMethod, useCommandManager);
 #else
             return new DelegateCommand(executeMethod);
@@ -93,7 +93,7 @@ namespace DevExpress.Mvvm.Native {
             return new DelegateCommand(executeMethod);
         }
         public static DelegateCommand Create(Action executeMethod, Func<bool> canExecuteMethod, bool useCommandManager) {
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !MONO
             return new DelegateCommand(executeMethod, canExecuteMethod, useCommandManager);
 #else
             return new DelegateCommand(executeMethod, canExecuteMethod);

@@ -6,6 +6,11 @@ using NUnit.Framework;
 using System.Windows;
 
 namespace DevExpress.Mvvm.Tests {
+#if MONO
+    public enum Visibility{
+        Visible, Hidden, Collapsed
+    }
+#endif
     [TestFixture]
     public class DesignTimeHelperTests {
         public class NestedClass {

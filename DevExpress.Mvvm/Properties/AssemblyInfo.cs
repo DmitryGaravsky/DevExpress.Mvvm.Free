@@ -27,7 +27,7 @@ using DevExpress.Mvvm.Native;
 [assembly: ComVisible(false)]
 [assembly: NeutralResourcesLanguage("en-US")]
 
-#if !NETFX_CORE
+#if !NETFX_CORE && !MONO
 [assembly: XmlnsPrefix(XmlNamespaceConstants.MvvmNamespaceDefinition, XmlNamespaceConstants.MvvmPrefix)]
 [assembly: XmlnsDefinition(XmlNamespaceConstants.MvvmNamespaceDefinition, XmlNamespaceConstants.MvvmNamespace)]
 #endif

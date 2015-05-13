@@ -28,6 +28,7 @@ namespace DevExpress.Mvvm {
 #endif
     [Browsable(false), EditorBrowsable(EditorBrowsableState.Never)]
     public static class MessageBoxEnumsConverter {
+#if !MONO
         [Browsable(false), EditorBrowsable(EditorBrowsableState.Never)]
         public static bool? ToBool(this MessageBoxResult result) {
             switch(result) {
@@ -36,6 +37,7 @@ namespace DevExpress.Mvvm {
                 default: return true;
             }
         }
+#endif
         [Browsable(false), EditorBrowsable(EditorBrowsableState.Never)]
         public static bool? ToBool(this MessageResult result) {
             switch(result) {
@@ -44,6 +46,7 @@ namespace DevExpress.Mvvm {
                 default: return true;
             }
         }
+#if!MONO
         [Browsable(false), EditorBrowsable(EditorBrowsableState.Never)]
         public static MessageBoxResult ToMessageBoxResult(this MessageResult result) {
             switch(result) {
@@ -117,6 +120,7 @@ namespace DevExpress.Mvvm {
                 default: return MessageIcon.None;
             }
         }
+#endif
 #endif
     }
 #endif

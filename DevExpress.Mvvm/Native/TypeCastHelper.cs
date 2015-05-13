@@ -7,11 +7,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+#if !MONO
 #if !NETFX_CORE
 using System.Windows.Threading;
 #else
 using Windows.UI.Xaml;
 using Windows.UI.Core;
+#endif
 #endif
 
 namespace DevExpress.Mvvm.Native {
