@@ -455,7 +455,6 @@ namespace DevExpress.Mvvm.POCO {
             method.SetParameters(property.PropertyType);
             bool shouldBoxValues = property.PropertyType.IsValueType;
 
-            ParameterBuilder value = method.DefineParameter(1, ParameterAttributes.None, "value");
             ILGenerator gen = method.GetILGenerator();
 
             gen.DeclareLocal(property.PropertyType);
@@ -550,7 +549,6 @@ namespace DevExpress.Mvvm.POCO {
             method.SetReturnType(typeof(void));
             method.SetParameters(typeof(String));
 
-            ParameterBuilder propertyName = method.DefineParameter(1, ParameterAttributes.None, "propertyName");
             ILGenerator gen = method.GetILGenerator();
 
             gen.Emit(OpCodes.Ldarg_0);
@@ -595,7 +593,6 @@ namespace DevExpress.Mvvm.POCO {
             method.SetReturnType(typeof(void));
             method.SetParameters(typeof(PropertyChangedEventHandler));
 
-            ParameterBuilder value = method.DefineParameter(1, ParameterAttributes.None, "value");
             ILGenerator gen = method.GetILGenerator();
 
             gen.Emit(OpCodes.Ldarg_0);
@@ -627,7 +624,6 @@ namespace DevExpress.Mvvm.POCO {
             method.SetReturnType(typeof(void));
             method.SetParameters(typeof(String));
 
-            ParameterBuilder propertyName = method.DefineParameter(1, ParameterAttributes.None, "propertyName");
             ILGenerator gen = method.GetILGenerator();
 
             gen.Emit(OpCodes.Ldarg_0);
@@ -695,8 +691,6 @@ namespace DevExpress.Mvvm.POCO {
         }
 
         static bool IsCommandMethod(Type type, MethodInfo method) {
-            ParameterInfo[] parameters = method.GetParameters();
-
             CommandAttribute attribute = ViewModelBase.GetAttribute<CommandAttribute>(method);
             if(attribute != null && !attribute.IsCommand)
                 return false;
@@ -958,7 +952,7 @@ namespace DevExpress.Mvvm.POCO {
 
             method.SetReturnType(typeof(void));
             method.SetParameters(typeof(object));
-            ParameterBuilder value = method.DefineParameter(1, ParameterAttributes.None, "value");
+
             ILGenerator gen = method.GetILGenerator();
 
             gen.Emit(OpCodes.Ldarg_0);

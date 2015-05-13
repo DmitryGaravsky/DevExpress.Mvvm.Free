@@ -133,7 +133,6 @@ namespace DevExpress.Mvvm.Native {
                 .SingleOrDefault();
             if(buildMetadataMethod == null)
                 return null;
-            var key = new Tuple<Type, Type>(componentType, metadataClassType);
             IAttributesProvider result = CreateBuilder(componentType);
             buildMetadataMethod.Invoke(null, new[] { result });
             return result;

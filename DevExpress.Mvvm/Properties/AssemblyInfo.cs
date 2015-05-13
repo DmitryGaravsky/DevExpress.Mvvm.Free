@@ -1,4 +1,4 @@
-#if !NETFX_CORE
+#if !NETFX_CORE && !MONO
 using System.Windows.Markup;
 #endif
 using System.Resources;

@@ -266,11 +266,14 @@ namespace DevExpress.Mvvm {
         {
             readonly MethodInfo method;
             readonly MethodInfo canExecuteMethod;
-            readonly string name;
+
             readonly bool? useCommandManager;
             readonly bool hasParameter;
+#if SILVERLIGHT
+			readonly string name;
             readonly Attribute[] attributes;
             readonly Type reflectedType;
+#endif
             public MethodInfo Method { get { return method; } }
             public MethodInfo CanExecuteMethod { get { return canExecuteMethod; } }
             public CommandProperty(MethodInfo method, MethodInfo canExecuteMethod, string name, bool? useCommandManager, Attribute[] attributes, Type reflectedType)
@@ -281,10 +284,12 @@ namespace DevExpress.Mvvm {
                 this.method = method;
                 this.hasParameter = method.GetParameters().Length == 1;
                 this.canExecuteMethod = canExecuteMethod;
-                this.name = name;
                 this.useCommandManager = useCommandManager;
+#if SILVERLIGHT
+				this.name = name;
                 this.attributes = attributes;
                 this.reflectedType = reflectedType;
+#endif
             }
             IDelegateCommand GetCommand(object component) {
                 return ((ViewModelBase)component).GetCommand(method, canExecuteMethod, useCommandManager, hasParameter);

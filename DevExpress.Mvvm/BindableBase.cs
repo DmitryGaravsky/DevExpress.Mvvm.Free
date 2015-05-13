@@ -26,7 +26,6 @@ namespace DevExpress.Mvvm {
         protected bool SetProperty<T>(ref T storage, T value, string propertyName, Action changedCallback) {
             if(CompareValues<T>(storage, value))
                 return false;
-            T oldValue = storage;
             storage = value;
             CallChangedCallBackAndRaisePropertyChanged(propertyName, changedCallback);
             return true;
