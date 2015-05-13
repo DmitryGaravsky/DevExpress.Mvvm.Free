@@ -168,7 +168,7 @@ namespace DevExpress.Mvvm.Tests {
             Messenger.Default.Register<string>(recipient1, x => message1 = x);
             Messenger.Default.Register<string>(recipient2, x => message2 = x);
             Messenger.Default.Register<string>(recipient3, x => message3 = x);
-            Messenger.Default.Register<string>(recipient3, x => message3 = x);
+            Messenger.Default.Register<string>(recipient4, x => message4 = x);
 
             Messenger.Default.Send<string, TestRecipient>("test1");
             Assert.AreEqual("test1", message1);
@@ -729,7 +729,7 @@ namespace DevExpress.Mvvm.Tests {
         public void NullService8() {
             IMessenger service = null;
             object token = new object();
-            service.Send(new object(), new object());
+            service.Send(new object(), token);
         }
         [Test, ExpectedException(typeof(ArgumentNullException))]
         public void NullService9() {

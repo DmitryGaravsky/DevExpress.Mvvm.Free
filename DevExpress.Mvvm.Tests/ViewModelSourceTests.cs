@@ -47,12 +47,10 @@ namespace DevExpress.Mvvm.Tests {
             return res;
         }
         public static object GetPropertyValue(object obj, string propertyName) {
-            Type type = obj.GetType();
             PropertyInfo pInfo = GetProperty(obj, propertyName);
             return pInfo != null ? pInfo.GetValue(obj, null) : null;
         }
         public static AttributeType GetPropertyAttribute<AttributeType>(object obj, string propertyName) where AttributeType : Attribute {
-            Type type = obj.GetType();
             PropertyInfo property = GetProperty(obj, propertyName);
             Type attributeType = typeof(AttributeType);
 
@@ -554,7 +552,7 @@ namespace DevExpress.Mvvm.Tests {
         [Test]
         public void CreateViaGenericParameters_InvalidParaneterTypes() {
             AssertHelper.AssertThrows<ViewModelSourceException>(() => {
-                var viewModel = ViewModelSource<POCOViewModel_CreateViaGenericParameters>.Create(1);
+                ViewModelSource<POCOViewModel_CreateViaGenericParameters>.Create(1);
             }, x => Assert.AreEqual("Constructor not found.", x.Message));
         }
 
@@ -1604,7 +1602,6 @@ namespace DevExpress.Mvvm.Tests {
         [Test]
         public void InheritBindableBaseTest() {
             var viewModel = ViewModelSource.Create<POCOViewModel_BindableBaseDescendant>();
-            var interfaces = viewModel.GetType().GetInterfaces();
             CheckBindableProperty(viewModel, x => x.Property1, (vm, x) => vm.Property1 = x, "x", "y");
             CheckBindableProperty(viewModel, x => x.Property2, (vm, x) => vm.Property2 = x, "x", "y");
         }
@@ -1626,7 +1623,6 @@ namespace DevExpress.Mvvm.Tests {
         [Test]
         public void INPCImplementorTest() {
             var viewModel = ViewModelSource.Create<POCOViewModel_INPCImplementor>();
-            var interfaces = viewModel.GetType().GetInterfaces();
             CheckBindableProperty(viewModel, x => x.Property1, (vm, x) => vm.Property1 = x, "x", "y");
         }
         #endregion
